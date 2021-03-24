@@ -4,12 +4,35 @@
 **Copyright:** **2021**, *Terence F. Golla, Released under [MIT](/LICENSE) licence*.
 
 ## About
-The GCodeParser library is a light weight G-Code parser for the Arduino using only a single character buffer to first collect a line of code (also called a 'block') from a serial or file input and then parse that line into a code block and comments.
+The GCodeParser library is a lightweight G-Code parser for the Arduino using only a single character buffer to first collect a line of code (also called a 'block') from a serial or file input and then parse that line into a code block and comments.
 
 The parser was originally designed for use with code for the SphereBot, an EggBot clone.
 https://github.com/tgolla/SphereBot
 
 ## Usage
+The GCodeParser library is a lightweight G-Code parser in that it uses a single character buffer (string) which by default is defined as 256 characters plus 2.  This low memory usage profile is highly desirable in the limited memory world of the Arduino Uno.  To use the parser across your Arduino code you will want to define a global variable in your application.
+
+```
+GCodeParser GCode = GCodeParser();
+```
+
+The first step in parsing a line of G-Code is to load a line into the line buffer.  This is done a character at a time by calling the AddCharToLine method.  The AddCharToLine method returns a Boolean value of true when the end line is detected (\r\n or \n).  At this point the line buffer is ready to be parsed.  The following is an example of processing the serial input.
+
+```
+void loop()
+{
+  if (Serial.available() > 0)
+  {
+    if (GCode.AddCharToLine(Serial.read()))
+    {
+      GCode.ParseLine();
+      // Code to process the line of G-Code here…
+    }
+  }
+}
+```
+
+Once the line is parsed you can use the HasWord method to determine if a G-Code command (also referred to as a ‘word’) exist.  You can then get the value for the command with the GetWordValue method. 
 
 A working example of the parser can be found the following GitHub repository.
 https://github.com/tgolla/SphereBot

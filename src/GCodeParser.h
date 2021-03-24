@@ -28,7 +28,7 @@ SOFTWARE.
 const int MAX_LINE_SIZE = 256; // Maximun GCode line size.
 
 /// <summary>
-/// The GCodeParser library is a light weight G-Code parser for the Arduino using only
+/// The GCodeParser library is a lightweight G-Code parser for the Arduino using only
 /// a single character buffer to first collect a line of code (also called a 'block') 
 /// from a serial or file input and then parse that line into a code block and comments.
 /// 
