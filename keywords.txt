@@ -1,0 +1,25 @@
+# Syntax Coloring Map For ExampleLibrary
+
+# Datatypes (KEYWORD1)
+
+GCodeParser     KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+
+AddCharToLine           KEYWORD2
+ParseLine               KEYWORD2
+RemoveCommentSeparators KEYWORD2
+FindWord                KEYWORD2
+HasWord                 KEYWORD2
+IsWord                  KEYWORD2
+GetWordValue            KEYWORD2
+
+line                    KEYWORD2
+comments                KEYWORD2
+lastComment             KEYWORD2
+blockDelete             KEYWORD2
+
+# Instances (KEYWORD2)
+
+# Constants (LITERAL1)
+MAX_LINE_SIZE   LITERAL1
