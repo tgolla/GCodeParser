@@ -37,6 +37,40 @@ Once the line is parsed you can use the HasWord method to determine if a G-Code 
 A working example of the parser can be found the following GitHub repository.
 https://github.com/tgolla/SphereBot
 
+
+### `blockDelete`
+The blockDelete attribute is a Boolean which returns true when the line begins with a slash '/'.
+
+### `comments`
+The comments attribute points to the comment(s) separated from the G-Code command line after executing the ParseLine method. Initially comment(s) contain the comment separators (parenthesis or semicolon). Executing the RemoveCommentSeparators method will remove the comment separators from all of the comments.
+
+### `lastComment`
+The lastComment attribute points to the last comment on the command line. This is important as the last command will always be interpreted for active comment syntax.
+
+### `line`
+The line attribute points to the character buffer. After executing the ParseLine method the line attribute points to the G-Code command line (also called a 'block').
+
+### `AddCharToLine(char c)`
+The AddCharToLine method adds the provided character to the line buffer.  Each line should be terminated with either a carriage return/line feed (\r\n Windows) or line feed (\n Linux). The method returns a Boolean true when the end of line has been reached.
+
+### `FindWord(char letter)`
+The FindWord method returns a pointer to where the word (character) begins in the command line. In G-Code a word is a letter other than N followed by a real value. The method does not confirm the word is a valid G-Code and for this reason could be used to find the first occurrence of any character in the command line.
+
+### `GetWordValue(char letter)`
+The GetWordValue returns the value that follows the word character provided. If the word does not exist in the command line zero is returned.  For this reason it is best to use the HasWord method first to confirm the word exist in order to confirm the value returned is valid.
+
+### `HasWord(char letter)`
+The HasWord method returns a Boolean true if the word (letter followed by value). The method does test to confirm the character provided is a valid G-Code word.
+
+### `IsWord(char letter)`
+The IsWord method returns a Boolean true if the character provided represents a valid G-Code word.
+
+### `ParseLine()`
+The ParseLine method parses the command line removing whitespace and comments. The method should be used after the AddCharToLine method returns true.
+
+### `RemoveCommentSeparators()`
+The RemoveCommentSeparators removes the comment separators (parenthesis or semicolon) from of the comments. The method should be used after the command line is parsed.
+
 ## Limitations
 Currently the parser is not sophisticated enough to deal with parameters, Boolean operators, expressions, binary operators, functions and repeated items. However, this should not be an obstacle when building 2D/3D plotters, CNC, and projects with an Arduino controller.
 
