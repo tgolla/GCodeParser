@@ -51,8 +51,6 @@ class GCodeParser
 {
 private:
 	int lineCharCount;
-
-	char lastChar;
 	bool completeLineIsAvailableToParse;
 
 	void Initialize();

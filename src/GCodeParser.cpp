@@ -34,6 +34,7 @@ void GCodeParser::Initialize()
 	lineCharCount = 0;
 	line[lineCharCount] = '\0';
 	comments = line;
+	lastComment = comments;
 	blockDelete = false;
 	completeLineIsAvailableToParse = false;
 }
@@ -49,8 +50,6 @@ void GCodeParser::Initialize()
 /// </remark>
 GCodeParser::GCodeParser()
 {
-	lastChar = '\0';
-
 	Initialize();
 }
 
@@ -59,32 +58,21 @@ GCodeParser::GCodeParser()
 /// </summary>
 /// <param name="letter">The character to add.</param>
 /// <returns>True if a complete line is available to parse.</returns>
-/// <remarks>Adding a character after a CR/LF or LF have been added will reset the line buffer.</remarks>
+/// <remarks>Adding a character after a CR/LF (\r\n - Windows) or LF (\n - Linux, Mac) have been added will reset the line buffer.</remarks>
 bool GCodeParser::AddCharToLine(char c)
 {
+	// Determine is a new line is being added.
+	if (completeLineIsAvailableToParse)
+		Initialize();
+
 	// Look for end of line. CRLF (\r\n) or just LF (\n).
 	if (c == '\r' || c == '\n')
 	{
-		// If the last charater was not CR we are dealing with a Linux type file with lines ending in LF.
-		// If the last character was CR we are dealing with a Windows type file with lines ending in CRFL
-		// and have already processed the available line.
-		if (lastChar != '\r')
-		{
-			line[lineCharCount] = '\0';
+		if (c == '\n') // Ignore CR (\r)
 			completeLineIsAvailableToParse = true;
-		}
-		else
-		{
-			// Reset the line buffer and start a new line.
-			Initialize();
-		}
 	}
 	else
 	{
-		// Determine is a new line is being added.
-		if (completeLineIsAvailableToParse)
-			Initialize();
-
 		// Add character to line.
 		line[lineCharCount] = c;
 		lineCharCount++;
@@ -92,9 +80,9 @@ bool GCodeParser::AddCharToLine(char c)
 		// Deal with buffer overflow by initializing. TODO: Need a better solution.  i.e. Throw error?
 		if (lineCharCount > MAX_LINE_SIZE)
 			Initialize();
-	}
 
-	lastChar = c;
+		line[lineCharCount] = '\0';
+	}
 
 	return completeLineIsAvailableToParse;
 }
