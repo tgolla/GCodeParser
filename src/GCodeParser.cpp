@@ -62,7 +62,7 @@ GCodeParser::GCodeParser()
 /// <remarks>Adding a character after a CR/LF or LF have been added will reset the line buffer.</remarks>
 bool GCodeParser::AddCharToLine(char c)
 {
-	// Look for end of line. CRLF or just LF.
+	// Look for end of line. CRLF (\r\n) or just LF (\n).
 	if (c == '\r' || c == '\n')
 	{
 		// If the last charater was not CR we are dealing with a Linux type file with lines ending in LF.
@@ -180,6 +180,7 @@ void GCodeParser::ParseLine()
 
 	// Set pointer to comments.
 	comments = line + strlen(line) + correctCommentsPointerBy + 1;
+	lastComment = comments;
 
 	// There are several 'active' comments which look like comments but cause some action, like
 	// '(debug,..)' or '(print,..)'. If there are several comments on a line, only the last comment
