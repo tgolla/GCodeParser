@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\GCodeParser.h">
+    <ClInclude Include="..\..\src\GCodeParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\GCodeParser.cpp">
+    <ClCompile Include="..\..\src\GCodeParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
