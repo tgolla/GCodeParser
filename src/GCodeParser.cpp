@@ -36,6 +36,7 @@ void GCodeParser::Initialize()
 	comments = line;
 	lastComment = comments;
 	blockDelete = false;
+	beginEnd = false;
 	completeLineIsAvailableToParse = false;
 }
 
@@ -222,8 +223,10 @@ void GCodeParser::ParseLine()
 
 	// The optional block delete character the slash '/' when placed first on a line can be used
 	// by some user interfaces to skip lines of code when needed.
-	if (line[0] == '/')
-		blockDelete = true;
+	blockDelete = (line[0] == '/');
+
+	// The '%' is used to demarcate the beginning (first line) and end (last line) of the program. It is optional if the file has an 'M2' or 'M30'. 
+	beginEnd = (line[0] == '%');
 }
 
 /// <summary>
@@ -350,18 +353,21 @@ bool GCodeParser::HasWord(char letter)
 	return true;
 }
 
+char wordLetter[] = { 'A', 'B', 'C', 'D', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '\0' };
+
 /// <summary>
 /// Determine if the letter provided represents a valid GCode word.
 /// </summary>
 /// <param name="letter">The letter to be tested.</param>
-/// <returns>True if the letter represents a valid word. </returns>
+/// <returns>True if the letter represents a valid word.</returns>
 /// <remark>
 /// Words may begin with any of the letters shown in the following
-/// Table. The table includes N, @ and ^ for completeness, even though,
-/// line numbers and polar coordinates are not words. Several letters 
-/// (I, J, K, L, P, R) may have different meanings in different contexts.
-/// Letters which refer to axis names are not valid on a machine which
-/// does not have the corresponding axis.
+/// Table. The table includes N, @, ^ and / for completeness, even 
+/// though, line numbers, polar coordinates and the block delete  
+/// character are not considered words. Several letters (I, J, K,
+/// L, P, R) may have different meanings in different contexts.
+/// Letters which refer to axis names are not valid on a machines
+/// which do not have the corresponding axis.
 /// 
 /// A - A axis of machine.
 /// B - B axis of machine.
@@ -389,11 +395,11 @@ bool GCodeParser::HasWord(char letter)
 /// Z - Z axis of machine
 /// @ - Polar coordinate for the distance. Polar coordinates are not considered words.
 /// ^ - Polar coordinate for the angle. Polar coordinates are not considered words.
-/// /// </remark>
+/// / - The block delete character causes the processor to skips the line and is not considered a word.
+/// % - Indicated the beginning and end of a program and is not considered a word.
+/// </remark>
 bool GCodeParser::IsWord(char letter)
-{
-	char wordLetter[] = { 'A', 'B', 'C', 'D', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '\0' };
-
+{	
 	int pointer = 0;
 	while (wordLetter[pointer] != '\0')
 	{
@@ -406,6 +412,32 @@ bool GCodeParser::IsWord(char letter)
 	}
 
 	return false;
+}
+
+/// <summary>
+/// Determine if the line contains any GCode words.
+/// </summary>
+/// <returns>True if there are no words.</returns>
+/// <remarks>Words are not validated.<remark>
+bool GCodeParser::NoWords()
+{
+	if (line[0] == '\0' || blockDelete || beginEnd)
+	{
+		return true;
+	}
+
+	int pointer = 0;
+	while (wordLetter[pointer] != '\0')
+	{
+		if (HasWord(wordLetter[pointer]))
+		{
+			return false;
+		}
+
+		pointer++;
+	}
+
+	return true;
 }
 
 /// <summary>

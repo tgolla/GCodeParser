@@ -51,7 +51,6 @@ class GCodeParser
 {
 private:
 	int lineCharCount;
-	bool completeLineIsAvailableToParse;
 
 	void Initialize();
 public:
@@ -59,6 +58,8 @@ public:
 	char* comments;
 	char* lastComment;
 	bool blockDelete;
+	bool beginEnd;
+	bool completeLineIsAvailableToParse;
 
 	GCodeParser();
 	bool AddCharToLine(char c);
@@ -68,6 +69,7 @@ public:
 	int FindWord(char letter);
 	bool HasWord(char letter);
 	bool IsWord(char letter);
+	bool NoWords();
 
 	double GetWordValue(char letter);
 };

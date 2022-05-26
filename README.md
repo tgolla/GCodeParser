@@ -37,12 +37,17 @@ Once the line is parsed you can use the HasWord method to determine if a G-Code 
 A working example of the parser can be found the following GitHub repository.
 https://github.com/tgolla/SphereBot
 
+### `beginEnd`
+The beginEnd attribute is a Boolean which returns true if the first character of the line it the percent character (%) which is used to denote the first and last line of the program.  
 
 ### `blockDelete`
 The blockDelete attribute is a Boolean which returns true when the line begins with a slash '/'.
 
 ### `comments`
 The comments attribute points to the comment(s) separated from the G-Code command line after executing the ParseLine method. Initially comment(s) contain the comment separators (parenthesis or semicolon). Executing the RemoveCommentSeparators method will remove the comment separators from all of the comments.
+
+### `completeLineIsAvailableToParse`
+The completeLineIsAvailableToParse attribute is a Boolean which returns true when there is a line available to parse. The value of the attribute is also returned by `AddCharToLine(char c)`.
 
 ### `lastComment`
 The lastComment attribute points to the last comment on the command line. This is important as the last command will always be interpreted for active comment syntax.
@@ -64,6 +69,9 @@ The HasWord method returns a Boolean true if the word (letter followed by value)
 
 ### `IsWord(char letter)`
 The IsWord method returns a Boolean true if the character provided represents a valid G-Code word.
+
+### `NoWords()`
+The NoWords method returns a Boolean the if the line is blank and/or has no G-Code words.
 
 ### `ParseLine()`
 The ParseLine method parses the command line removing whitespace and comments. The method should be used after the AddCharToLine method returns true.
