@@ -52,7 +52,6 @@ class GCodeParser
 private:
 	int lineCharCount;
 
-	void Initialize();
 public:
 	char line[MAX_LINE_SIZE + 2];
 	char* comments;
@@ -61,6 +60,7 @@ public:
 	bool beginEnd;
 	bool completeLineIsAvailableToParse;
 
+	void Initialize();
 	GCodeParser();
 	bool AddCharToLine(char c);
 	void ParseLine();
