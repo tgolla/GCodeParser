@@ -67,6 +67,9 @@ The GetWordValue returns the value that follows the word character provided. If 
 ### `HasWord(char letter)`
 The HasWord method returns a Boolean true if the word (letter followed by value). The method does test to confirm the character provided is a valid G-Code word.
 
+### `Initialize()`
+The Initialize method is call when the class in initialized and each time a new line is detected in `AddCharToLine(char c)`. If using the same instance of the GCodeParser with multiple files you may need to manually execute the method.
+
 ### `IsWord(char letter)`
 The IsWord method returns a Boolean true if the character provided represents a valid G-Code word.
 
@@ -74,7 +77,10 @@ The IsWord method returns a Boolean true if the character provided represents a 
 The NoWords method returns a Boolean the if the line is blank and/or has no G-Code words.
 
 ### `ParseLine()`
-The ParseLine method parses the command line removing whitespace and comments. The method should be used after the AddCharToLine method returns true.
+The ParseLine method parses the command line removing whitespace and comments. The method should be used after the `AddCharToLine` method returns true.
+
+### `ParseLine(char* gCode)`
+The ParseLine method when passed g-code parses the command line passed removing whitespace and comments. The method is an alternative to first using the `AddCharToLine` method to build a line.
 
 ### `RemoveCommentSeparators()`
 The RemoveCommentSeparators removes the comment separators (parenthesis or semicolon) from of the comments. The method should be used after the command line is parsed.

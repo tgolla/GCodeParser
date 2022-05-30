@@ -89,6 +89,25 @@ bool GCodeParser::AddCharToLine(char c)
 }
 
 /// <summary>
+/// Parses the line passed removing spaces, tabs and comments. Comments are shifted to the end of the line buffer.
+/// </summary>
+void GCodeParser::ParseLine(char* gCode)
+{
+	Initialize();
+
+  int pointer = 0;
+  while (gCode[pointer] != '\0')
+  {
+	  AddCharToLine(gCode[pointer]);
+	  pointer = pointer + 1;
+  }
+  	
+  AddCharToLine('\n');
+  ParseLine();
+}
+
+
+/// <summary>
 /// Parses the line removing spaces, tabs and comments. Comments are shifted to the end of the line buffer.
 /// </summary>
 void GCodeParser::ParseLine()

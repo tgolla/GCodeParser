@@ -373,6 +373,14 @@ namespace GCodeParserUnitTests
 				pointer++;
 				Assert::AreEqual(GCode.comments[pointer], resultComments8[pointer]);
 			} while (GCode.comments[pointer] != '\0');
+
+			GCode.ParseLine("G00 X0 Y3200;Comment");
+
+			pointer = -1;
+			do {
+				pointer++;
+				Assert::AreEqual(GCode.comments[pointer], resultComments9[pointer]);
+			} while (GCode.comments[pointer] != '\0');
 		}
 
 		TEST_METHOD(ParseLine_ConfirmLastComment)
@@ -487,6 +495,14 @@ namespace GCodeParserUnitTests
 				pointer++;
 				Assert::AreEqual(GCode.lastComment[pointer], resultLastComment8[pointer]);
 			} while (GCode.lastComment[pointer] != '\0');
+
+			GCode.ParseLine("/G21 (Block ;Delete) G90 ;MSG,123(?)");
+
+			pointer = -1;
+			do {
+				pointer++;
+				Assert::AreEqual(GCode.lastComment[pointer], resultLastComment4[pointer]);
+			} while (GCode.lastComment[pointer] != '\0');
 		}
 
 		TEST_METHOD(ParseLine_ConfirmBlockDelete)
@@ -534,9 +550,18 @@ namespace GCodeParserUnitTests
 			GCode.ParseLine();
 
 			Assert::AreEqual(GCode.blockDelete, false);
+
 			startAt = AddLine(&GCode, startAt);
 
 			GCode.ParseLine();
+
+			Assert::AreEqual(GCode.blockDelete, false);
+
+			GCode.ParseLine("/M300 ;Block Delete");
+
+			Assert::AreEqual(GCode.blockDelete, true);
+
+			GCode.ParseLine("M300 ;Block Delete");
 
 			Assert::AreEqual(GCode.blockDelete, false);
 		}
@@ -598,6 +623,14 @@ namespace GCodeParserUnitTests
 			GCode.ParseLine();
 
 			Assert::AreEqual(GCode.beginEnd, true);
+
+			GCode.ParseLine("%");
+
+			Assert::AreEqual(GCode.beginEnd, true);
+
+			GCode.ParseLine("G00 X20 Y20");
+
+			Assert::AreEqual(GCode.beginEnd, false);
 		}
 
 		TEST_METHOD(ParseLine_ConfirmNoWords)
@@ -657,6 +690,14 @@ namespace GCodeParserUnitTests
 			GCode.ParseLine();
 
 			Assert::AreEqual(GCode.NoWords(), true);
+
+			GCode.ParseLine("zf00^dsa&f%df; Comment");
+
+			Assert::AreEqual(GCode.NoWords(), true);
+
+			GCode.ParseLine("M300 ;Comment");
+
+			Assert::AreEqual(GCode.NoWords(), false);
 		}
 
 		TEST_METHOD(RemoveCommentSeparators_ConfirmComments)
