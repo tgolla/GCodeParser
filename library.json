@@ -1,0 +1,23 @@
+{
+  "name": "GCodeParser",
+  "version": "1.3.0",
+  "description": "The GCodeParser library is a lightweight G-Code parser for the Arduino using only a single character buffer to first collect a line of code (also called a 'block') from a serial or file input and then parse that line into a code block and comments.",
+  "keywords": "device, control",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/tgolla/GCodeParser"
+  },
+  "authors":
+  [
+    {
+      "name": "Terence F. Golla",
+      "email": "tfg@terencegolla.com",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/tgolla/GCodeParser",
+  "frameworks": "*",
+  "platforms": "*"
+}
